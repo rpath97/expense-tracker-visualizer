@@ -126,6 +126,21 @@
     if (expensesEl) expensesEl.textContent = formatMoney(totalExpenses);
     if (remainingEl) remainingEl.textContent = formatMoney(remaining);
     if (summaryRemaining) summaryRemaining.classList.toggle('negative', remaining < 0);
+
+    var topIncome = document.getElementById('top-summary-income');
+    var topIncomeSub = document.getElementById('top-summary-income-sublabel');
+    var topExpenses = document.getElementById('top-summary-expenses');
+    var topExpensesSub = document.getElementById('top-summary-expenses-sublabel');
+    var topRemaining = document.getElementById('top-summary-remaining');
+    var topRemainingSub = document.getElementById('top-summary-remaining-sublabel');
+    var topRemainingCard = document.querySelector('.summary-card--remaining');
+    if (topIncome) topIncome.textContent = formatMoney(income);
+    if (topIncomeSub) topIncomeSub.textContent = formatMoney(income);
+    if (topExpenses) topExpenses.textContent = formatMoney(totalExpenses);
+    if (topExpensesSub) topExpensesSub.textContent = formatMoney(totalExpenses);
+    if (topRemaining) topRemaining.textContent = formatMoney(remaining);
+    if (topRemainingSub) topRemainingSub.textContent = formatMoney(remaining);
+    if (topRemainingCard) topRemainingCard.classList.toggle('negative', remaining < 0);
   }
 
   function updateChart() {
