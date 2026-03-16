@@ -314,7 +314,8 @@
         '<td>' + escapeHtml(MONTH_NAMES[m - 1]) + '</td>' +
         '<td class="num">' + formatMoney(s.income) + '</td>' +
         '<td class="num">' + formatMoney(s.expenses) + '</td>' +
-        '<td class="num">' + formatMoney(s.remaining) + '</td>';
+        '<td class="num">' + formatMoney(s.remaining) + '</td>' +
+        '<td class="year-table-edit-cell"><button type="button" class="year-edit-btn" data-year="' + year + '" data-month="' + m + '" aria-label="Edit ' + escapeAttr(MONTH_NAMES[m - 1]) + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></td>';
       tbody.appendChild(tr);
     }
 
@@ -369,7 +370,28 @@
           }
         }
       });
+      attachYearEditListeners(year);
     }
+  }
+
+  function attachYearEditListeners(activeYear) {
+    const buttons = document.querySelectorAll('.year-edit-btn');
+    const monthEl = document.getElementById('month');
+    const yearEl = document.getElementById('year');
+    const reviewYearEl = document.getElementById('review-year');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const m = String(btn.getAttribute('data-month') || '');
+        const y = String(btn.getAttribute('data-year') || activeYear || '');
+        if (yearEl) yearEl.value = y;
+        if (monthEl) monthEl.value = m;
+        if (reviewYearEl) reviewYearEl.value = y;
+        loadMonth(m, y);
+        refresh();
+        const incomeEl = document.getElementById('income');
+        if (incomeEl) incomeEl.focus();
+      });
+    });
   }
 
   function addExpenseRow() {
@@ -378,7 +400,14 @@
     const amountInput = document.getElementById('new-expense-amount');
     if (!container) return;
     const name = nameInput ? String(nameInput.value || '').trim() : '';
-    const amount = amountInput ? String(amountInput.value || '').trim() : '';
+    const amountRaw = amountInput ? String(amountInput.value || '').trim() : '';
+    const amountNumber = parseNum(amountRaw);
+    if (!name || amountNumber <= 0) {
+      if (!name && nameInput) nameInput.focus();
+      else if (amountInput) amountInput.focus();
+      return;
+    }
+    const amount = String(amountNumber);
     const color = COLORS[container.children.length % COLORS.length];
     const row = document.createElement('div');
     row.className = 'expense-row';
@@ -404,11 +433,14 @@
     const btn = row.querySelector('.btn-edit') || row.querySelector('.btn-remove');
     if (btn) {
       btn.addEventListener('click', function () {
-        const rows = document.querySelectorAll('#expense-rows .expense-row');
-        if (rows.length >= 1) {
-          row.remove();
-          refresh();
-        }
+        const nameInput = document.getElementById('new-expense-name');
+        const amountInput = document.getElementById('new-expense-amount');
+        const name = row.querySelector('.expense-name');
+        const amount = row.querySelector('.expense-amount');
+        if (nameInput && name) nameInput.value = name.value || '';
+        if (amountInput && amount) amountInput.value = amount.value || '';
+        row.remove();
+        refresh();
       });
     }
   }

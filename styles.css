@@ -715,6 +715,11 @@ body {
 .year-table td:nth-child(3) { width: 24%; }
 .year-table th:nth-child(4),
 .year-table td:nth-child(4) { width: 24%; }
+.year-table th:nth-child(5),
+.year-table td:nth-child(5) {
+  width: 32px;
+  text-align: center;
+}
 
 .year-table th {
   color: var(--text-muted);
@@ -745,6 +750,21 @@ body {
 .year-table .num {
   font-family: var(--font-mono);
   text-align: right;
+}
+
+.year-edit-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.year-edit-btn:hover {
+  color: var(--text);
 }
 
 .chart-wrap-bar {
