@@ -12,7 +12,10 @@
 <body>
   <div class="app">
     <header class="header dashboard-header">
-        <div class="header-left">
+      <div class="header-left">
+        <button type="button" class="icon-btn header-hamburger" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>
+        </button>
         <span class="header-logo header-logo--svg" aria-hidden="true">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M7 12l10-5-10 5 4 5 6-10"/></svg>
         </span>
@@ -96,7 +99,7 @@
               </select>
             </div>
           </div>
-          <p class="save-hint">Data is saved automatically for this month & year.</p>
+          <p class="save-hint">Ders and automatically in the month & year.</p>
 
           <label for="income" class="income-label">Monthly Income</label>
           <div class="input-wrap income-input-wrap">
@@ -108,14 +111,14 @@
           <div class="expense-list-header">
             <span class="expense-list-header-dot" aria-hidden="true"></span>
             <span>Name</span>
-            <span>$ Amount</span>
+            <span>s Amount</span>
           </div>
           <div class="expense-rows" id="expense-rows"></div>
           <div class="expense-row expense-row--new" id="new-expense-row">
             <input type="text" class="expense-name" id="new-expense-name" placeholder="Name" aria-label="New expense name">
             <div class="input-wrap small">
               <span class="currency">$</span>
-              <input type="text" class="expense-amount" id="new-expense-amount" inputmode="decimal" placeholder="Amount" aria-label="New expense amount">
+              <input type="text" class="expense-amount" id="new-expense-amount" inputmode="decimal" placeholder="s Amount" aria-label="New expense amount">
             </div>
             <button type="button" class="btn-add-primary" id="add-expense" aria-label="Add expense">Add</button>
           </div>
@@ -125,7 +128,7 @@
       <section class="chart-panel">
         <div class="card chart-card chart-card--square">
           <h2>Expense Breakdown</h2>
-          <p class="chart-hint">Pie chart where you spent</p>
+          <p class="chart-hint">Picxchata where you spent</p>
           <div class="chart-wrap chart-wrap--square">
             <canvas id="pie-chart" aria-label="Expense breakdown pie chart"></canvas>
           </div>
@@ -137,7 +140,7 @@
         <div class="year-review-main">
           <div class="card year-review-card">
             <h2>Year in review</h2>
-            <p class="chart-hint">Select and review your expenses for a year</p>
+            <p class="chart-hint">Select and review your with a year</p>
             <div class="year-summary" id="year-summary">
               <p class="year-summary-placeholder" id="year-summary-placeholder">Select a year to review.</p>
               <table class="year-table" id="year-table" hidden aria-label="Monthly breakdown for selected year">
@@ -172,7 +175,7 @@
         <span class="status-bar-icon" aria-hidden="true">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </span>
-        <span class="status-bar-text">Data saved locally</span>
+        <span class="status-bar-text">Newk linst</span>
       </div>
       <div class="status-bar-right">
         <span class="status-bar-icon" aria-hidden="true">
