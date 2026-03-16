@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Finance Visualizer | Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Personal Finance Visualizer</h1>
+      <p class="tagline">See where your money goes — in real time</p>
+    </header>
+
+    <main class="main">
+      <section class="inputs-panel">
+        <div class="card period-card">
+          <h3>Period</h3>
+          <div class="period-row">
+            <div class="period-field">
+              <label for="month">Month</label>
+              <select id="month" aria-label="Month">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+            <div class="period-field">
+              <label for="year">Year</label>
+              <select id="year" aria-label="Year">
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+              </select>
+            </div>
+          </div>
+          <p class="save-hint">Data is saved automatically for this month & year.</p>
+        </div>
+
+        <div class="card income-card">
+          <label for="income">Monthly income</label>
+          <div class="input-wrap">
+            <span class="currency">$</span>
+            <input type="text" id="income" inputmode="decimal" placeholder="0" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="card expenses-card">
+          <div class="card-head">
+            <h2>Expenses</h2>
+            <button type="button" class="btn-add" id="add-expense" aria-label="Add expense">+ Add</button>
+          </div>
+          <div class="expense-rows" id="expense-rows">
+            <div class="expense-row">
+              <input type="text" class="expense-name" placeholder="e.g. Rent" data-name>
+              <div class="input-wrap small">
+                <span class="currency">$</span>
+                <input type="text" class="expense-amount" inputmode="decimal" placeholder="0" data-amount>
+              </div>
+              <button type="button" class="btn-remove" aria-label="Remove">×</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary card" id="summary">
+          <h3>Summary</h3>
+          <div class="summary-grid">
+            <div class="summary-item income">
+              <span class="label">Income</span>
+              <span class="value" id="summary-income">$0</span>
+            </div>
+            <div class="summary-item expenses">
+              <span class="label">Total expenses</span>
+              <span class="value" id="summary-expenses">$0</span>
+            </div>
+            <div class="summary-item remaining">
+              <span class="label">Remaining</span>
+              <span class="value" id="summary-remaining">$0</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chart-panel">
+        <div class="card chart-card">
+          <h2>Expense breakdown</h2>
+          <p class="chart-hint">Pie updates as you type</p>
+          <div class="chart-wrap">
+            <canvas id="pie-chart" aria-label="Expense breakdown pie chart"></canvas>
+          </div>
+          <div class="chart-legend" id="chart-legend" aria-live="polite"></div>
+        </div>
+
+        <div class="card year-review-card">
+          <h2>Year in review</h2>
+          <p class="chart-hint">See expenses for any saved year</p>
+          <div class="year-picker-row">
+            <label for="review-year">Year</label>
+            <select id="review-year" aria-label="Select year to review"></select>
+          </div>
+          <div class="year-summary" id="year-summary">
+            <p class="year-summary-placeholder" id="year-summary-placeholder">Select a year above.</p>
+            <table class="year-table" id="year-table" hidden aria-label="Monthly breakdown for selected year">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Income</th>
+                  <th>Expenses</th>
+                  <th>Remaining</th>
+                </tr>
+              </thead>
+              <tbody id="year-table-body"></tbody>
+              <tfoot id="year-table-foot"></tfoot>
+            </table>
+          </div>
+          <div class="chart-wrap chart-wrap-bar">
+            <canvas id="year-chart" aria-label="Monthly expenses for selected year"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Expense Tracker Visualizer — data is saved in your browser so you can review each year.</p>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
