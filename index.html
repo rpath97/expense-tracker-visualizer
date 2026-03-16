@@ -62,8 +62,8 @@
 
     <main class="main">
       <section class="inputs-panel">
-        <div class="card period-card">
-          <h3>Period</h3>
+        <div class="card expense-input-card">
+          <h3 class="expense-input-title">Expense Input</h3>
           <div class="period-row">
             <div class="period-field">
               <label for="month">Month</label>
@@ -95,30 +95,27 @@
             </div>
           </div>
           <p class="save-hint">Data is saved automatically for this month & year.</p>
-        </div>
 
-        <div class="card income-card">
-          <label for="income">Monthly income</label>
-          <div class="input-wrap">
+          <label for="income" class="income-label">Monthly Income</label>
+          <div class="input-wrap income-input-wrap">
             <span class="currency">$</span>
             <input type="text" id="income" inputmode="decimal" placeholder="0" autocomplete="off">
           </div>
-        </div>
 
-        <div class="card expenses-card">
-          <div class="card-head">
-            <h2>Expenses</h2>
-            <button type="button" class="btn-add" id="add-expense" aria-label="Add expense">+ Add</button>
+          <h4 class="add-expense-title">Add Expense</h4>
+          <div class="expense-list-header">
+            <span class="expense-list-header-dot" aria-hidden="true"></span>
+            <span>Name</span>
+            <span>Amount</span>
           </div>
-          <div class="expense-rows" id="expense-rows">
-            <div class="expense-row">
-              <input type="text" class="expense-name" placeholder="e.g. Rent" data-name>
-              <div class="input-wrap small">
-                <span class="currency">$</span>
-                <input type="text" class="expense-amount" inputmode="decimal" placeholder="0" data-amount>
-              </div>
-              <button type="button" class="btn-remove" aria-label="Remove">×</button>
+          <div class="expense-rows" id="expense-rows"></div>
+          <div class="expense-row expense-row--new" id="new-expense-row">
+            <input type="text" class="expense-name" id="new-expense-name" placeholder="Name" aria-label="New expense name">
+            <div class="input-wrap small">
+              <span class="currency">$</span>
+              <input type="text" class="expense-amount" id="new-expense-amount" inputmode="decimal" placeholder="Amount" aria-label="New expense amount">
             </div>
+            <button type="button" class="btn-add-primary" id="add-expense" aria-label="Add expense">Add</button>
           </div>
         </div>
 

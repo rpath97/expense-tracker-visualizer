@@ -49,7 +49,7 @@
   }
 
   function getExpenseData() {
-    const rows = document.querySelectorAll('.expense-row');
+    const rows = document.querySelectorAll('#expense-rows .expense-row');
     const data = [];
     rows.forEach(function (row) {
       const nameEl = row.querySelector('.expense-name');
@@ -92,14 +92,16 @@
     const container = document.getElementById('expense-rows');
     if (!container) return;
     container.innerHTML = '';
-    const list = monthData.expenses && monthData.expenses.length ? monthData.expenses : [{ name: '', amount: '' }];
-    list.forEach(function (item) {
+    const list = monthData.expenses && monthData.expenses.length ? monthData.expenses : [];
+    list.forEach(function (item, idx) {
+      const color = COLORS[idx % COLORS.length];
       const row = document.createElement('div');
       row.className = 'expense-row';
       row.innerHTML =
-        '<input type="text" class="expense-name" placeholder="e.g. Rent" data-name value="' + escapeAttr(item.name || '') + '">' +
+        '<span class="expense-dot" style="background-color:' + color + '" aria-hidden="true"></span>' +
+        '<input type="text" class="expense-name" placeholder="Name" data-name value="' + escapeAttr(item.name || '') + '">' +
         '<div class="input-wrap small"><span class="currency">$</span><input type="text" class="expense-amount" inputmode="decimal" placeholder="0" data-amount value="' + escapeAttr(item.amount ? String(item.amount) : '') + '"></div>' +
-        '<button type="button" class="btn-remove" aria-label="Remove">×</button>';
+        '<button type="button" class="btn-edit" aria-label="Remove"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>';
       container.appendChild(row);
       attachRowListeners(row);
     });
@@ -380,16 +382,24 @@
 
   function addExpenseRow() {
     const container = document.getElementById('expense-rows');
+    const nameInput = document.getElementById('new-expense-name');
+    const amountInput = document.getElementById('new-expense-amount');
     if (!container) return;
+    const name = nameInput ? String(nameInput.value || '').trim() : '';
+    const amount = amountInput ? String(amountInput.value || '').trim() : '';
+    const color = COLORS[container.children.length % COLORS.length];
     const row = document.createElement('div');
     row.className = 'expense-row';
     row.innerHTML =
-      '<input type="text" class="expense-name" placeholder="e.g. Rent" data-name>' +
-      '<div class="input-wrap small"><span class="currency">$</span><input type="text" class="expense-amount" inputmode="decimal" placeholder="0" data-amount></div>' +
-      '<button type="button" class="btn-remove" aria-label="Remove">×</button>';
+      '<span class="expense-dot" style="background-color:' + color + '" aria-hidden="true"></span>' +
+      '<input type="text" class="expense-name" placeholder="Name" data-name value="' + escapeAttr(name) + '">' +
+      '<div class="input-wrap small"><span class="currency">$</span><input type="text" class="expense-amount" inputmode="decimal" placeholder="0" data-amount value="' + escapeAttr(amount) + '"></div>' +
+      '<button type="button" class="btn-edit" aria-label="Remove"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>';
     container.appendChild(row);
-    row.querySelector('.expense-name').focus();
     attachRowListeners(row);
+    if (nameInput) nameInput.value = '';
+    if (amountInput) amountInput.value = '';
+    if (nameInput) nameInput.focus();
     refresh();
   }
 
@@ -399,11 +409,11 @@
       input.addEventListener('input', refresh);
       input.addEventListener('change', refresh);
     });
-    const btn = row.querySelector('.btn-remove');
+    const btn = row.querySelector('.btn-edit') || row.querySelector('.btn-remove');
     if (btn) {
       btn.addEventListener('click', function () {
-        const rows = document.querySelectorAll('.expense-row');
-        if (rows.length > 1) {
+        const rows = document.querySelectorAll('#expense-rows .expense-row');
+        if (rows.length >= 1) {
           row.remove();
           refresh();
         }
@@ -440,6 +450,10 @@
 
     const addBtn = document.getElementById('add-expense');
     if (addBtn) addBtn.addEventListener('click', addExpenseRow);
+
+    var newName = document.getElementById('new-expense-name');
+    var newAmount = document.getElementById('new-expense-amount');
+    if (newAmount) newAmount.addEventListener('keydown', function (e) { if (e.key === 'Enter') addExpenseRow(); });
 
     const reviewYearEl = document.getElementById('review-year');
     if (reviewYearEl) reviewYearEl.addEventListener('change', updateYearReview);
