@@ -460,6 +460,16 @@
     const reviewYearEl = document.getElementById('review-year');
     if (reviewYearEl) reviewYearEl.addEventListener('change', updateYearReview);
 
+    function updateStatusBarTime() {
+      var d = new Date();
+      var timeEl = document.getElementById('status-time');
+      var dateEl = document.getElementById('status-date');
+      if (timeEl) timeEl.textContent = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      if (dateEl) dateEl.textContent = d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '/');
+    }
+    updateStatusBarTime();
+    setInterval(updateStatusBarTime, 60000);
+
     refreshReviewYearOptions();
     refresh();
   }

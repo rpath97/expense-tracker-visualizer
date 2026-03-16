@@ -727,12 +727,38 @@ body {
 
 .footer {
   margin-top: auto;
-  padding: 1.5rem 1.5rem 2rem;
-  text-align: center;
+  flex-shrink: 0;
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.5rem;
   font-size: 0.8rem;
   color: var(--text-muted);
   background: var(--surface);
   border-top: 1px solid var(--border);
 }
 
-.footer p { margin: 0; }
+.status-bar-left,
+.status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-bar-icon {
+  display: inline-flex;
+  color: var(--text-muted);
+}
+
+.status-bar-text {
+  color: var(--text-muted);
+}
+
+.status-bar-time,
+.status-bar-date {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
