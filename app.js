@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'expenseTrackerData';
   const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   const COLORS = [
@@ -33,7 +32,7 @@
   async function apiJson(path, options) {
     const res = await fetch(path, {
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
+      headers: options && options.body ? { 'Content-Type': 'application/json' } : {},
       ...(options || {}),
     });
     const text = await res.text();
@@ -50,6 +49,23 @@
     return data;
   }
 
+  // --- Finance API ---
+
+  async function fetchMonthData(year, month) {
+    return apiJson('/api/finance/month/' + year + '/' + month);
+  }
+
+  async function saveMonthData(year, month, payload) {
+    return apiJson('/api/finance/month/' + year + '/' + month, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async function fetchYearData(year) {
+    return apiJson('/api/finance/months?year=' + year);
+  }
+
   function parseNum(str) {
     if (str == null || String(str).trim() === '') return 0;
     const n = parseFloat(String(str).replace(/[^0-9.-]/g, ''));
@@ -58,21 +74,6 @@
 
   function formatMoney(n) {
     return '$' + (n < 0 ? '-' : '') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
-  function getStoredData() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch (e) {
-      return {};
-    }
-  }
-
-  function setStoredData(data) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch (e) {}
   }
 
   function getCurrentMonth() {
@@ -103,45 +104,49 @@
     return el ? parseNum(el.value) : 0;
   }
 
-  function saveCurrentMonth() {
+  async function saveCurrentMonth() {
     const year = getCurrentYear();
     const month = getCurrentMonth();
     const income = getIncome();
     const expenses = getExpenseData();
-    const data = getStoredData();
-    if (!data[year]) data[year] = {};
-    data[year][month] = {
+    const payload = {
       income: income,
-      expenses: expenses.map(function (e) { return { name: e.label, amount: e.value }; })
+      expenses: expenses.map(function (e) { return { name: e.label, amount: e.value }; }),
     };
-    setStoredData(data);
-    refreshReviewYearOptions();
+    try {
+      await saveMonthData(year, month, payload);
+      await refreshReviewYearOptions();
+    } catch (err) {
+      console.error('saveCurrentMonth failed', err);
+    }
   }
 
-  function loadMonth(month, year) {
-    const data = getStoredData();
-    const yearData = data[year] || {};
-    const monthData = yearData[month] || { income: 0, expenses: [] };
+  async function loadMonth(month, year) {
+    try {
+      const data = await fetchMonthData(year, month);
+      const incomeEl = document.getElementById('income');
+      if (incomeEl) incomeEl.value = (data.income > 0) ? String(data.income) : '';
 
-    const incomeEl = document.getElementById('income');
-    if (incomeEl) incomeEl.value = monthData.income > 0 ? String(monthData.income) : '';
+      const container = document.getElementById('expense-rows');
+      if (!container) return;
+      container.innerHTML = '';
 
-    const container = document.getElementById('expense-rows');
-    if (!container) return;
-    container.innerHTML = '';
-    const list = monthData.expenses && monthData.expenses.length ? monthData.expenses : [];
-    list.forEach(function (item, idx) {
-      const color = COLORS[idx % COLORS.length];
-      const row = document.createElement('div');
-      row.className = 'expense-row';
-      row.innerHTML =
-        '<span class="expense-dot" style="background-color:' + color + '" aria-hidden="true"></span>' +
-        '<input type="text" class="expense-name" placeholder="Name" data-name value="' + escapeAttr(item.name || '') + '">' +
-        '<div class="input-wrap small"><span class="currency">$</span><input type="text" class="expense-amount" inputmode="decimal" placeholder="0" data-amount value="' + escapeAttr(item.amount ? String(item.amount) : '') + '"></div>' +
-        '<button type="button" class="btn-edit" aria-label="Remove"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>';
-      container.appendChild(row);
-      attachRowListeners(row);
-    });
+      const list = Array.isArray(data.expenses) ? data.expenses : [];
+      list.forEach(function (item, idx) {
+        const color = COLORS[idx % COLORS.length];
+        const row = document.createElement('div');
+        row.className = 'expense-row';
+        row.innerHTML =
+          '<span class="expense-dot" style="background-color:' + color + '" aria-hidden="true"></span>' +
+          '<input type="text" class="expense-name" placeholder="Name" data-name value="' + escapeAttr(item.name || '') + '">' +
+          '<div class="input-wrap small"><span class="currency">$</span><input type="text" class="expense-amount" inputmode="decimal" placeholder="0" data-amount value="' + escapeAttr(item.amount != null ? String(item.amount) : '') + '"></div>' +
+          '<button type="button" class="btn-edit" aria-label="Remove"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>';
+        container.appendChild(row);
+        attachRowListeners(row);
+      });
+    } catch (err) {
+      console.error('loadMonth failed', err);
+    }
   }
 
   function escapeAttr(s) {
@@ -257,24 +262,16 @@
     }, 400);
   }
 
-  function refreshReviewYearOptions() {
-    const data = getStoredData();
-    const years = Object.keys(data).filter(function (y) {
-      const months = data[y];
-      return months && Object.keys(months).some(function (m) {
-        const d = months[m];
-        return d && (d.income > 0 || (d.expenses && d.expenses.length > 0));
-      });
-    }).sort(function (a, b) { return parseInt(b, 10) - parseInt(a, 10); });
-
+  async function refreshReviewYearOptions() {
     const sel = document.getElementById('review-year');
     if (!sel) return;
-    const current = sel.value;
+    const years = ['2025', '2026', '2027', '2028', '2029', '2030'];
+    const current = getCurrentYear();
     sel.innerHTML = '';
-    const option = document.createElement('option');
-    option.value = '';
-    option.textContent = '— Select year —';
-    sel.appendChild(option);
+    const empty = document.createElement('option');
+    empty.value = '';
+    empty.textContent = '— Select year —';
+    sel.appendChild(empty);
     years.forEach(function (y) {
       const opt = document.createElement('option');
       opt.value = y;
@@ -282,20 +279,11 @@
       sel.appendChild(opt);
     });
     if (years.indexOf(current) !== -1) sel.value = current;
-    else if (years.length > 0) sel.value = years[0];
-    updateYearReview();
+    else sel.value = years[0] || '2025';
+    await updateYearReview();
   }
 
-  function getMonthSummary(year, month) {
-    const data = getStoredData();
-    const m = data[year] && data[year][month];
-    if (!m) return { income: 0, expenses: 0, remaining: 0 };
-    const income = m.income || 0;
-    const expenses = (m.expenses || []).reduce(function (sum, e) { return sum + (e.amount || 0); }, 0);
-    return { income: income, expenses: expenses, remaining: income - expenses };
-  }
-
-  function updateYearReview() {
+  async function updateYearReview() {
     const year = document.getElementById('review-year') && document.getElementById('review-year').value;
     const placeholder = document.getElementById('year-summary-placeholder');
     const table = document.getElementById('year-table');
@@ -310,21 +298,30 @@
       return;
     }
 
-    const monthLabels = [];
-    const incomeByMonth = [];
-    const expensesByMonth = [];
+    let data;
+    try {
+      data = await fetchYearData(year);
+    } catch (err) {
+      console.error('updateYearReview failed', err);
+      if (placeholder) {
+        placeholder.textContent = 'No saved data for ' + year + '.';
+        placeholder.hidden = false;
+      }
+      if (table) table.hidden = true;
+      if (yearChart) { yearChart.destroy(); yearChart = null; }
+      return;
+    }
+
+    const months = data.months || [];
+    const monthLabels = months.length === 12 ? months.map(function (_, i) { return MONTH_NAMES[i]; }) : MONTH_NAMES.slice();
+    const incomeByMonth = months.length === 12 ? months.map(function (m) { return m.income || 0; }) : [];
+    const expensesByMonth = months.length === 12 ? months.map(function (m) { return m.expenses || 0; }) : [];
     let totalIncome = 0;
     let totalExpenses = 0;
-
-    for (let m = 1; m <= 12; m++) {
-      const key = String(m);
-      const s = getMonthSummary(year, key);
-      monthLabels.push(MONTH_NAMES[m - 1]);
-      incomeByMonth.push(s.income);
-      expensesByMonth.push(s.expenses);
-      totalIncome += s.income;
-      totalExpenses += s.expenses;
-    }
+    months.forEach(function (m) {
+      totalIncome += m.income || 0;
+      totalExpenses += m.expenses || 0;
+    });
 
     const hasAny = totalIncome > 0 || totalExpenses > 0;
     if (!hasAny) {
@@ -342,16 +339,15 @@
 
     tbody.innerHTML = '';
     for (let m = 1; m <= 12; m++) {
-      const key = String(m);
-      const s = getMonthSummary(year, key);
-      const hasData = s.income > 0 || s.expenses > 0;
+      const s = months[m - 1] || { income: 0, expenses: 0, remaining: 0 };
+      const hasData = (s.income > 0 || s.expenses > 0);
       const tr = document.createElement('tr');
       if (hasData) tr.className = 'year-table-row--has-data';
       tr.innerHTML =
         '<td>' + escapeHtml(MONTH_NAMES[m - 1]) + '</td>' +
-        '<td class="num">' + formatMoney(s.income) + '</td>' +
-        '<td class="num">' + formatMoney(s.expenses) + '</td>' +
-        '<td class="num">' + formatMoney(s.remaining) + '</td>' +
+        '<td class="num">' + formatMoney(s.income || 0) + '</td>' +
+        '<td class="num">' + formatMoney(s.expenses || 0) + '</td>' +
+        '<td class="num">' + formatMoney((s.income || 0) - (s.expenses || 0)) + '</td>' +
         '<td class="year-table-edit-cell"><button type="button" class="year-edit-btn" data-year="' + year + '" data-month="' + m + '" aria-label="Edit ' + escapeAttr(MONTH_NAMES[m - 1]) + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></td>';
       tbody.appendChild(tr);
     }
@@ -362,7 +358,8 @@
       '<td>Total</td>' +
       '<td class="num">' + formatMoney(totalIncome) + '</td>' +
       '<td class="num">' + formatMoney(totalExpenses) + '</td>' +
-      '<td class="num">' + formatMoney(totalIncome - totalExpenses) + '</td>';
+      '<td class="num">' + formatMoney(totalIncome - totalExpenses) + '</td>' +
+      '<td></td>';
     tfoot.appendChild(footTr);
 
     if (yearChart) yearChart.destroy();
@@ -423,8 +420,7 @@
         if (yearEl) yearEl.value = y;
         if (monthEl) monthEl.value = m;
         if (reviewYearEl) reviewYearEl.value = y;
-        loadMonth(m, y);
-        refresh();
+        loadMonth(m, y).then(refresh);
         const incomeEl = document.getElementById('income');
         if (incomeEl) incomeEl.focus();
       });
@@ -482,7 +478,7 @@
     }
   }
 
-  function init() {
+  async function init() {
     const now = new Date();
     const monthEl = document.getElementById('month');
     const yearEl = document.getElementById('year');
@@ -492,15 +488,13 @@
       if (y >= 2025 && y <= 2030) yearEl.value = String(y);
     }
 
-    loadMonth(getCurrentMonth(), getCurrentYear());
+    await loadMonth(getCurrentMonth(), getCurrentYear());
 
     monthEl && monthEl.addEventListener('change', function () {
-      loadMonth(getCurrentMonth(), getCurrentYear());
-      refresh();
+      loadMonth(getCurrentMonth(), getCurrentYear()).then(refresh);
     });
     yearEl && yearEl.addEventListener('change', function () {
-      loadMonth(getCurrentMonth(), getCurrentYear());
-      refresh();
+      loadMonth(getCurrentMonth(), getCurrentYear()).then(refresh);
     });
 
     const incomeEl = document.getElementById('income');
@@ -512,12 +506,11 @@
     const addBtn = document.getElementById('add-expense');
     if (addBtn) addBtn.addEventListener('click', addExpenseRow);
 
-    var newName = document.getElementById('new-expense-name');
     var newAmount = document.getElementById('new-expense-amount');
     if (newAmount) newAmount.addEventListener('keydown', function (e) { if (e.key === 'Enter') addExpenseRow(); });
 
     const reviewYearEl = document.getElementById('review-year');
-    if (reviewYearEl) reviewYearEl.addEventListener('change', updateYearReview);
+    if (reviewYearEl) reviewYearEl.addEventListener('change', function () { updateYearReview(); });
 
     function updateStatusBarTime() {
       var d = new Date();
@@ -529,7 +522,7 @@
     updateStatusBarTime();
     setInterval(updateStatusBarTime, 60000);
 
-    refreshReviewYearOptions();
+    await refreshReviewYearOptions();
     refresh();
   }
 
@@ -576,7 +569,7 @@
           showAppScreen();
           if (!appInitialized) {
             appInitialized = true;
-            init();
+            await init();
           }
         } catch (err) {
           if (errorEl) errorEl.textContent = err.message || 'Login failed';
@@ -598,7 +591,7 @@
           showAppScreen();
           if (!appInitialized) {
             appInitialized = true;
-            init();
+            await init();
           }
         } catch (err) {
           if (errorEl) errorEl.textContent = err.message || 'Signup failed';
@@ -606,13 +599,12 @@
       });
     }
 
-    // Try auto-login
     try {
       await apiJson('/api/auth/me');
       showAppScreen();
       if (!appInitialized) {
         appInitialized = true;
-        init();
+        await init();
       }
     } catch {
       showAuthScreen();

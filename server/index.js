@@ -250,7 +250,7 @@ app.get('/api/finance/months', authRequired, async (req, res) => {
       const incomeVal = monthRow ? Number(monthRow.income) : 0;
       const expensesVal = monthRow ? (expenseByMonthId.get(monthRow.id) || 0) : 0;
       result.push({
-        month,
+        month: m,
         income: incomeVal,
         expenses: expensesVal,
         remaining: incomeVal - expensesVal,
