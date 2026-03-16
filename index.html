@@ -125,7 +125,8 @@
         </div>
       </section>
 
-      <section class="chart-panel">
+      <!-- class="chart-panel" -->
+      <section>
         <div class="card chart-card chart-card--square">
           <h2>Expense Breakdown</h2>
           <p class="chart-hint">Picxchata where you spent</p>
@@ -139,34 +140,38 @@
       <section class="year-review-panel">
         <div class="year-review-main">
           <div class="card year-review-card">
-            <h2>Year in review</h2>
-            <p class="chart-hint">Select and review your with a year</p>
-            <div class="year-summary" id="year-summary">
-              <p class="year-summary-placeholder" id="year-summary-placeholder">Select a year to review.</p>
-              <table class="year-table" id="year-table" hidden aria-label="Monthly breakdown for selected year">
-                <thead>
-                  <tr>
-                    <th>MONTH</th>
-                    <th>INCOME</th>
-                    <th>EXPENSES</th>
-                    <th>REMAINING</th>
-                  </tr>
-                </thead>
-                <tbody id="year-table-body"></tbody>
-                <tfoot id="year-table-foot"></tfoot>
-              </table>
+            <div class="year-review-card-head">
+              <div>
+                <h2>Year in review</h2>
+                <p class="chart-hint">Select and review your with a year</p>
+              </div>
+              <div class="year-picker-inline">
+                <label for="review-year" class="year-picker-inline-label">Year</label>
+                <select id="review-year" aria-label="Select year to review"></select>
+              </div>
             </div>
-            <div class="chart-wrap chart-wrap-bar">
-              <canvas id="year-chart" aria-label="Monthly expenses for selected year"></canvas>
+            <div class="year-review-merged">
+              <div class="year-summary" id="year-summary">
+                <p class="year-summary-placeholder" id="year-summary-placeholder">Select a year to review.</p>
+                <table class="year-table" id="year-table" hidden aria-label="Monthly breakdown for selected year">
+                  <thead>
+                    <tr>
+                      <th>MONTH</th>
+                      <th>INCOME</th>
+                      <th>EXPENSES</th>
+                      <th>REMAINING</th>
+                    </tr>
+                  </thead>
+                  <tbody id="year-table-body"></tbody>
+                  <tfoot id="year-table-foot"></tfoot>
+                </table>
+              </div>
+              <div class="chart-wrap chart-wrap-bar">
+                <canvas id="year-chart" aria-label="Monthly expenses for selected year"></canvas>
+              </div>
             </div>
           </div>
         </div>
-        <aside class="year-review-sidebar">
-          <div class="year-picker-row">
-            <label for="review-year">Year</label>
-            <select id="review-year" aria-label="Select year to review"></select>
-          </div>
-        </aside>
       </section>
     </main>
 

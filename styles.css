@@ -203,19 +203,25 @@ body {
   }
 }
 
-/* Main: left | pie | year review with sidebar - uses full width */
+/* Main: Year in review section expanded (wider) */
 .main {
   display: grid;
-  grid-template-columns: minmax(260px, 360px) minmax(260px, 280px) 1fr;
+  grid-template-columns: 1fr 1fr 1.4fr;
   gap: 0;
   flex: 1;
   min-height: 0;
   min-width: 0;
 }
 
-.inputs-panel {
+.main > section {
+  margin: 0;
+}
+
+.main > section {
   padding: 1.25rem 1rem;
-  border-right: 1px solid var(--border);
+}
+
+.inputs-panel {
   background: var(--bg);
   overflow-y: auto;
   display: flex;
@@ -224,8 +230,6 @@ body {
 }
 
 .chart-panel {
-  padding: 1.25rem 1rem;
-  border-right: 1px solid var(--border);
   background: var(--surface);
   display: flex;
   flex-direction: column;
@@ -252,12 +256,6 @@ body {
 
   .year-review-panel {
     flex-direction: column;
-  }
-
-  .year-review-sidebar {
-    width: 100%;
-    border-left: none;
-    border-top: 1px solid var(--border);
   }
 }
 
@@ -595,55 +593,90 @@ body {
 .year-review-main {
   flex: 1;
   min-width: 0;
-  overflow-y: auto;
-  overflow-x: auto;
-  padding: 1.25rem 1rem;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.year-review-sidebar {
-  width: 160px;
-  flex-shrink: 0;
-  padding: 1.25rem 1rem;
-  background: var(--surface-hover);
-  border-left: 1px solid var(--border);
+.year-review-card {
+  padding: 1rem 1rem;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.year-review-card h2 {
-  font-size: 1.1rem;
+.year-review-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.year-review-card-head h2 {
+  font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.15rem 0;
 }
 
-.year-picker-row {
-  margin-bottom: 0;
+.year-picker-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.year-picker-row label {
-  display: block;
-  font-size: 0.8rem;
+.year-picker-inline-label {
+  font-size: 0.85rem;
   color: var(--text-muted);
-  margin-bottom: 0.35rem;
+  margin: 0;
 }
 
-.year-picker-row select {
-  width: 100%;
-  max-width: 140px;
+.year-picker-inline select {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.65rem;
   color: var(--text);
   font-family: var(--font);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  min-width: 80px;
 }
 
-.year-picker-row select:focus {
+.year-picker-inline select:focus {
   outline: none;
   border-color: var(--accent);
 }
 
+.year-review-merged {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.year-review-merged .year-summary {
+  flex: 0 0 auto;
+  min-width: 0;
+  margin-bottom: 0;
+  overflow: auto;
+}
+
+.year-review-merged .chart-wrap-bar {
+  flex: 1 1 auto;
+  min-height: 160px;
+  width: 100%;
+  max-width: 100%;
+}
+
+
 .year-summary {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .year-summary-placeholder {
@@ -654,16 +687,16 @@ body {
 
 .year-table {
   width: 100%;
-  min-width: 320px;
+  min-width: 0;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   table-layout: fixed;
 }
 
 .year-table th,
 .year-table td {
   text-align: left;
-  padding: 0.45rem 0.6rem;
+  padding: 0.35rem 0.4rem;
   border-bottom: 1px solid var(--border);
   overflow: hidden;
   text-overflow: ellipsis;

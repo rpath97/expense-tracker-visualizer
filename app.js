@@ -172,8 +172,7 @@
           datasets: [{
             data: values,
             backgroundColor: colors,
-            borderColor: '#252538',
-            borderWidth: 2
+            borderWidth: 0
           }]
         },
         options: {
