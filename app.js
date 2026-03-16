@@ -12,6 +12,43 @@
   let chart = null;
   let yearChart = null;
   let saveTimeout = null;
+  let appInitialized = false;
+
+  // --- Auth helpers ---
+
+  function showAuthScreen() {
+    const auth = document.getElementById('auth-screen');
+    const app = document.getElementById('app-screen');
+    if (auth) auth.classList.remove('hidden');
+    if (app) app.classList.add('hidden');
+  }
+
+  function showAppScreen() {
+    const auth = document.getElementById('auth-screen');
+    const app = document.getElementById('app-screen');
+    if (auth) auth.classList.add('hidden');
+    if (app) app.classList.remove('hidden');
+  }
+
+  async function apiJson(path, options) {
+    const res = await fetch(path, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      ...(options || {}),
+    });
+    const text = await res.text();
+    let data = null;
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = null;
+    }
+    if (!res.ok) {
+      const msg = data && data.error ? data.error : 'Request failed';
+      throw new Error(msg);
+    }
+    return data;
+  }
 
   function parseNum(str) {
     if (str == null || String(str).trim() === '') return 0;
@@ -496,9 +533,96 @@
     refresh();
   }
 
+  async function bootstrap() {
+    const loginForm = document.getElementById('auth-login-form');
+    const signupForm = document.getElementById('auth-signup-form');
+    const tabs = document.querySelectorAll('.auth-tab');
+    const errorEl = document.getElementById('auth-error');
+
+    function setTab(which) {
+      tabs.forEach(function (tab) {
+        const isActive = tab.getAttribute('data-auth-tab') === which;
+        tab.classList.toggle('auth-tab--active', isActive);
+      });
+      if (loginForm && signupForm) {
+        if (which === 'login') {
+          loginForm.classList.remove('auth-form--hidden');
+          signupForm.classList.add('auth-form--hidden');
+        } else {
+          signupForm.classList.remove('auth-form--hidden');
+          loginForm.classList.add('auth-form--hidden');
+        }
+      }
+      if (errorEl) errorEl.textContent = '';
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        setTab(tab.getAttribute('data-auth-tab'));
+      });
+    });
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (errorEl) errorEl.textContent = '';
+        const email = document.getElementById('auth-login-email').value.trim();
+        const password = document.getElementById('auth-login-password').value;
+        try {
+          await apiJson('/api/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password }),
+          });
+          showAppScreen();
+          if (!appInitialized) {
+            appInitialized = true;
+            init();
+          }
+        } catch (err) {
+          if (errorEl) errorEl.textContent = err.message || 'Login failed';
+        }
+      });
+    }
+
+    if (signupForm) {
+      signupForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (errorEl) errorEl.textContent = '';
+        const email = document.getElementById('auth-signup-email').value.trim();
+        const password = document.getElementById('auth-signup-password').value;
+        try {
+          await apiJson('/api/auth/signup', {
+            method: 'POST',
+            body: JSON.stringify({ email, password }),
+          });
+          showAppScreen();
+          if (!appInitialized) {
+            appInitialized = true;
+            init();
+          }
+        } catch (err) {
+          if (errorEl) errorEl.textContent = err.message || 'Signup failed';
+        }
+      });
+    }
+
+    // Try auto-login
+    try {
+      await apiJson('/api/auth/me');
+      showAppScreen();
+      if (!appInitialized) {
+        appInitialized = true;
+        init();
+      }
+    } catch {
+      showAuthScreen();
+      setTab('login');
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', bootstrap);
   } else {
-    init();
+    bootstrap();
   }
 })();
