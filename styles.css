@@ -581,8 +581,33 @@ body {
 .chart-legend {
   font-size: 0.85rem;
   color: var(--text-muted);
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
   min-height: 1.5em;
+}
+
+.chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chart-legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.chart-legend-label {
+  color: var(--text);
+}
+
+.chart-legend-pct {
+  color: var(--text-muted);
+  font-size: 0.8em;
 }
 
 /* Year in review panel: main (green) + sidebar (brown) */

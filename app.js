@@ -169,8 +169,8 @@
       const total = values.reduce(function (a, b) { return a + b; }, 0);
       legendEl.innerHTML = data.map(function (d, i) {
         const pct = total > 0 ? ((d.value / total) * 100).toFixed(1) : '0';
-        return '<span style="color:' + colors[i] + '">' + escapeHtml(d.label) + '</span> ' + pct + '%';
-      }).join(' · ');
+        return '<span class="chart-legend-item"><span class="chart-legend-swatch" style="background-color:' + colors[i] + '"></span><span class="chart-legend-label">' + escapeHtml(d.label) + '</span> <span class="chart-legend-pct">(' + pct + '%)</span></span>';
+      }).join('');
     }
 
     if (!chart) {
