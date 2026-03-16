@@ -29,8 +29,9 @@ body {
 }
 
 .app {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding: 0;
   min-height: 100vh;
   display: flex;
@@ -202,13 +203,14 @@ body {
   }
 }
 
-/* Main: left (red) | pie (yellow) | year review with sidebar (green + brown) */
+/* Main: left | pie | year review with sidebar - uses full width */
 .main {
   display: grid;
-  grid-template-columns: minmax(260px, 340px) 280px 1fr;
+  grid-template-columns: minmax(260px, 360px) minmax(260px, 280px) 1fr;
   gap: 0;
   flex: 1;
   min-height: 0;
+  min-width: 0;
 }
 
 .inputs-panel {
@@ -582,10 +584,11 @@ body {
   font-size: 0.8em;
 }
 
-/* Year in review panel: main (green) + sidebar (brown) */
+/* Year in review panel: main + sidebar */
 .year-review-panel {
   display: flex;
   min-height: 0;
+  min-width: 0;
   overflow: hidden;
 }
 
@@ -593,6 +596,7 @@ body {
   flex: 1;
   min-width: 0;
   overflow-y: auto;
+  overflow-x: auto;
   padding: 1.25rem 1rem;
 }
 
@@ -650,16 +654,29 @@ body {
 
 .year-table {
   width: 100%;
+  min-width: 320px;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  table-layout: fixed;
 }
 
 .year-table th,
 .year-table td {
   text-align: left;
-  padding: 0.5rem 0.75rem;
+  padding: 0.45rem 0.6rem;
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+.year-table th:nth-child(1),
+.year-table td:nth-child(1) { width: 28%; }
+.year-table th:nth-child(2),
+.year-table td:nth-child(2) { width: 24%; }
+.year-table th:nth-child(3),
+.year-table td:nth-child(3) { width: 24%; }
+.year-table th:nth-child(4),
+.year-table td:nth-child(4) { width: 24%; }
 
 .year-table th {
   color: var(--text-muted);
@@ -693,8 +710,10 @@ body {
 }
 
 .chart-wrap-bar {
+  width: 100%;
   max-width: 100%;
-  min-height: 200px;
+  min-height: 180px;
+  overflow: hidden;
 }
 
 .footer {
