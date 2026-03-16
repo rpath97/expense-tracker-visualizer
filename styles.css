@@ -701,6 +701,14 @@ body {
   background: var(--surface-hover);
 }
 
+.year-table tbody tr.year-table-row--has-data {
+  font-weight: 600;
+}
+
+.year-table tbody tr.year-table-row--has-data td {
+  color: var(--text);
+}
+
 .year-table tfoot td {
   font-weight: 600;
   border-top: 2px solid var(--border);

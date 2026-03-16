@@ -317,7 +317,9 @@
     for (let m = 1; m <= 12; m++) {
       const key = String(m);
       const s = getMonthSummary(year, key);
+      const hasData = s.income > 0 || s.expenses > 0;
       const tr = document.createElement('tr');
+      if (hasData) tr.className = 'year-table-row--has-data';
       tr.innerHTML =
         '<td>' + escapeHtml(MONTH_NAMES[m - 1]) + '</td>' +
         '<td class="num">' + formatMoney(s.income) + '</td>' +
