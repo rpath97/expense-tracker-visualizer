@@ -119,23 +119,14 @@
     const totalExpenses = expenses.reduce(function (sum, e) { return sum + e.value; }, 0);
     const remaining = income - totalExpenses;
 
-    const incomeEl = document.getElementById('summary-income');
-    const expensesEl = document.getElementById('summary-expenses');
-    const remainingEl = document.getElementById('summary-remaining');
-    const summaryRemaining = document.querySelector('.summary-item.remaining');
+    const topIncome = document.getElementById('top-summary-income');
+    const topIncomeSub = document.getElementById('top-summary-income-sublabel');
+    const topExpenses = document.getElementById('top-summary-expenses');
+    const topExpensesSub = document.getElementById('top-summary-expenses-sublabel');
+    const topRemaining = document.getElementById('top-summary-remaining');
+    const topRemainingSub = document.getElementById('top-summary-remaining-sublabel');
+    const topRemainingCard = document.querySelector('.summary-card--remaining');
 
-    if (incomeEl) incomeEl.textContent = formatMoney(income);
-    if (expensesEl) expensesEl.textContent = formatMoney(totalExpenses);
-    if (remainingEl) remainingEl.textContent = formatMoney(remaining);
-    if (summaryRemaining) summaryRemaining.classList.toggle('negative', remaining < 0);
-
-    var topIncome = document.getElementById('top-summary-income');
-    var topIncomeSub = document.getElementById('top-summary-income-sublabel');
-    var topExpenses = document.getElementById('top-summary-expenses');
-    var topExpensesSub = document.getElementById('top-summary-expenses-sublabel');
-    var topRemaining = document.getElementById('top-summary-remaining');
-    var topRemainingSub = document.getElementById('top-summary-remaining-sublabel');
-    var topRemainingCard = document.querySelector('.summary-card--remaining');
     if (topIncome) topIncome.textContent = formatMoney(income);
     if (topIncomeSub) topIncomeSub.textContent = formatMoney(income);
     if (topExpenses) topExpenses.textContent = formatMoney(totalExpenses);
@@ -181,7 +172,7 @@
           datasets: [{
             data: values,
             backgroundColor: colors,
-            borderColor: '#1a2332',
+            borderColor: '#252538',
             borderWidth: 2
           }]
         },

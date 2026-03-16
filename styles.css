@@ -1,10 +1,10 @@
 :root {
-  --bg: #0f1419;
-  --surface: #1a2332;
-  --surface-hover: #243044;
-  --border: #2d3a4d;
-  --text: #e6edf3;
-  --text-muted: #8b9cb3;
+  --bg: #1a1a2e;
+  --surface: #252538;
+  --surface-hover: #2e2e44;
+  --border: #3d3d5c;
+  --text: #e6e6f0;
+  --text-muted: #9898b0;
   --accent: #3fb950;
   --accent-dim: #238636;
   --expense: #f85149;
@@ -58,6 +58,13 @@ body {
 .header-logo {
   font-size: 1.5rem;
   line-height: 1;
+}
+
+.header-logo--svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
 }
 
 .header-title {
@@ -132,7 +139,7 @@ body {
 .summary-card-icon {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -147,13 +154,11 @@ body {
 .summary-card-icon--expenses {
   background: rgba(248, 81, 73, 0.15);
   color: var(--expense);
-  border-radius: 10px;
 }
 
 .summary-card-icon--remaining {
   background: rgba(63, 185, 80, 0.15);
   color: var(--accent);
-  border-radius: 10px;
 }
 
 .summary-card-text {
@@ -510,43 +515,6 @@ body {
   color: var(--expense);
   background: var(--border);
 }
-
-.summary h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 1rem 0;
-}
-
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.summary-item {
-  text-align: center;
-  padding: 0.75rem;
-  background: var(--bg);
-  border-radius: 8px;
-  border: 1px solid var(--border);
-}
-
-.summary-item .label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
-}
-
-.summary-item .value {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 1.1rem;
-  color: var(--accent);
-}
-
-.summary-item.remaining.negative .value { color: var(--expense); }
 
 .chart-card h2 {
   font-size: 1.1rem;
