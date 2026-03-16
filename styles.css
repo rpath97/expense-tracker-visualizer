@@ -266,7 +266,6 @@ body {
   display: block;
   font-size: 0.75rem;
   color: var(--text-muted);
-  text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.25rem;
 }
@@ -275,11 +274,8 @@ body {
   font-family: var(--font-mono);
   font-weight: 500;
   font-size: 1.1rem;
+  color: var(--accent);
 }
-
-.summary-item.income .value { color: var(--accent); }
-.summary-item.expenses .value { color: var(--expense); }
-.summary-item.remaining .value { color: var(--text); }
 
 .summary-item.remaining.negative .value { color: var(--expense); }
 

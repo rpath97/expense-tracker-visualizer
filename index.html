@@ -13,7 +13,7 @@
   <div class="app">
     <header class="header">
       <h1>Personal Finance Visualizer</h1>
-      <p class="tagline">See where your money goes — in real time</p>
+      <p class="tagline">See where your money goes - in real time</p>
     </header>
 
     <main class="main">
@@ -86,11 +86,11 @@
               <span class="value" id="summary-income">$0</span>
             </div>
             <div class="summary-item expenses">
-              <span class="label">Total expenses</span>
+              <span class="label">TOTAL EXPENSES</span>
               <span class="value" id="summary-expenses">$0</span>
             </div>
             <div class="summary-item remaining">
-              <span class="label">Remaining</span>
+              <span class="label">REMAINING</span>
               <span class="value" id="summary-remaining">$0</span>
             </div>
           </div>
@@ -100,7 +100,7 @@
       <section class="chart-panel">
         <div class="card chart-card">
           <h2>Expense breakdown</h2>
-          <p class="chart-hint">Pie updates as you type</p>
+          <p class="chart-hint">Pie chart update on type</p>
           <div class="chart-wrap">
             <canvas id="pie-chart" aria-label="Expense breakdown pie chart"></canvas>
           </div>
@@ -109,7 +109,7 @@
 
         <div class="card year-review-card">
           <h2>Year in review</h2>
-          <p class="chart-hint">See expenses for any saved year</p>
+          <p class="chart-hint">See expenses for one selected year</p>
           <div class="year-picker-row">
             <label for="review-year">Year</label>
             <select id="review-year" aria-label="Select year to review"></select>
@@ -119,10 +119,10 @@
             <table class="year-table" id="year-table" hidden aria-label="Monthly breakdown for selected year">
               <thead>
                 <tr>
-                  <th>Month</th>
-                  <th>Income</th>
-                  <th>Expenses</th>
-                  <th>Remaining</th>
+                  <th>MONTH</th>
+                  <th>INCOME</th>
+                  <th>EXPENDED</th>
+                  <th>REMAINING</th>
                 </tr>
               </thead>
               <tbody id="year-table-body"></tbody>
