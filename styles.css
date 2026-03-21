@@ -29,9 +29,12 @@
   /* Auth page (login) — uses same tokens; input border slightly stronger than card */
   --auth-input-border: rgba(255, 255, 255, 0.15);
   --auth-btn-gradient: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  --auth-screen-bg: var(--bg-gradient),
-    radial-gradient(circle at 18% 28%, var(--glow-purple), transparent 48%),
-    radial-gradient(circle at 82% 72%, var(--glow-indigo), transparent 48%);
+  --auth-nebula: radial-gradient(ellipse 90% 55% at 50% -15%, rgba(124, 58, 237, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 100% 50%, rgba(6, 182, 212, 0.14), transparent 50%),
+    radial-gradient(ellipse 55% 40% at 0% 85%, rgba(99, 102, 241, 0.2), transparent 50%),
+    radial-gradient(circle at 18% 28%, rgba(124, 58, 237, 0.35), transparent 48%),
+    radial-gradient(circle at 82% 72%, rgba(99, 102, 241, 0.3), transparent 48%);
+  --auth-screen-bg: var(--auth-nebula), var(--bg-gradient);
 
   /* Aliases for existing utilities */
   --bg: var(--color-navy);
@@ -81,7 +84,35 @@ body {
   justify-content: center;
   padding: 1rem;
   overflow-y: auto;
+  overflow-x: hidden;
   background: var(--auth-screen-bg);
+}
+
+/* Cosmic stardust (single layer, no duplicate hex) */
+.auth-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 25% 80%, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 40% 35%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1px 1px at 55% 60%, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 70% 15%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 85% 45%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 92% 88%, rgba(255, 255, 255, 0.22), transparent),
+    radial-gradient(1px 1px at 15% 55%, rgba(255, 255, 255, 0.28), transparent),
+    radial-gradient(1px 1px at 33% 12%, rgba(255, 255, 255, 0.32), transparent),
+    radial-gradient(1px 1px at 62% 92%, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1.5px 1.5px at 48% 48%, rgba(167, 139, 250, 0.5), transparent);
+  background-size: 100% 100%;
+  opacity: 0.85;
+}
+
+.auth-screen > * {
+  position: relative;
+  z-index: 1;
 }
 
 .auth-layout {
@@ -101,18 +132,23 @@ body {
   }
 }
 
-/* Decorative hero (no duplicate colors — uses theme tokens) */
+/* Decorative hero — glass panel + neon edge (mockup left column) */
 .auth-visual {
   display: none;
   position: relative;
-  min-height: 280px;
-  border-radius: 20px;
+  min-height: 300px;
+  border-radius: 24px;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 0 60px -12px var(--glow-indigo), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 0 80px -10px rgba(99, 102, 241, 0.35),
+    0 0 100px -24px rgba(124, 58, 237, 0.25),
+    0 0 60px -16px rgba(6, 182, 212, 0.12);
   overflow: hidden;
+  padding: 0.5rem;
 }
 
 @media (min-width: 900px) {
@@ -143,19 +179,37 @@ body {
 .auth-card {
   width: 100%;
   background: var(--card-bg);
-  border-radius: 16px;
+  border-radius: 20px;
   border: 1px solid var(--card-border);
-  padding: 1.75rem 1.75rem 1.25rem;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.55), 0 0 56px -10px var(--glow-purple);
+  padding: 2rem 2rem 1.5rem;
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 32px 100px rgba(15, 23, 42, 0.65),
+    0 0 72px -8px rgba(124, 58, 237, 0.45),
+    0 0 100px -20px rgba(6, 182, 212, 0.12);
 }
 
 .auth-logo-row {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1.2rem;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(124, 58, 237, 0.35);
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  box-shadow: 0 0 24px -4px var(--glow-purple);
+  color: var(--primary-highlight);
+  flex-shrink: 0;
 }
 
 .auth-card .header-logo--svg {
@@ -163,29 +217,34 @@ body {
 }
 
 .auth-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--text);
 }
 
+/* Mockup: text tabs + purple/indigo underline on active (not pills) */
 .auth-tabs {
-  display: inline-flex;
-  padding: 0.15rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.45);
-  border: 1px solid var(--card-border);
-  margin-bottom: 1.25rem;
+  display: flex;
+  gap: 2rem;
+  padding: 0 0 0;
+  margin: 0 0 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: none;
+  border-radius: 0;
 }
 
 .auth-tab {
   border: none;
   background: transparent;
   color: var(--text-secondary);
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
+  padding: 0.55rem 0;
+  margin-bottom: -1px;
+  font-size: 0.95rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: color 0.15s, background 0.15s, box-shadow 0.15s;
+  position: relative;
+  transition: color 0.2s;
 }
 
 .auth-tab:not(.auth-tab--active):hover {
@@ -193,9 +252,27 @@ body {
 }
 
 .auth-tab--active {
-  background: rgba(124, 58, 237, 0.28);
   color: var(--text);
-  box-shadow: 0 0 24px -4px var(--glow-purple);
+  background: none;
+  box-shadow: none;
+}
+
+.auth-tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent-indigo));
+  box-shadow: 0 0 14px var(--glow-purple), 0 0 20px rgba(6, 182, 212, 0.15);
+}
+
+@media (max-width: 380px) {
+  .auth-tabs {
+    gap: 1.25rem;
+  }
 }
 
 .auth-form {
@@ -292,7 +369,10 @@ body {
 .auth-footer {
   margin: 1rem 0 0;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
+}
+
+.auth-footer > span {
   color: var(--text-muted);
 }
 
@@ -302,9 +382,10 @@ body {
   padding: 0;
   font: inherit;
   font-weight: 600;
-  color: var(--accent-indigo);
+  color: var(--text-secondary);
   cursor: pointer;
   text-decoration: none;
+  transition: color 0.15s;
 }
 
 .auth-footer-link:hover {
