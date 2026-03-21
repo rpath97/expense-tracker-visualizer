@@ -560,9 +560,10 @@
       if (errorEl) errorEl.textContent = '';
     }
 
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        setTab(tab.getAttribute('data-auth-tab'));
+    document.querySelectorAll('.auth-tab, .auth-footer-link').forEach(function (el) {
+      el.addEventListener('click', function () {
+        const t = el.getAttribute('data-auth-tab');
+        if (t) setTab(t);
       });
     });
 
