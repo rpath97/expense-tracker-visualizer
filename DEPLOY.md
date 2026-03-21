@@ -42,7 +42,7 @@ If they differ, you get **Application failed to respond**. Edit the domain’s p
    Push to `main` or trigger a deploy from the dashboard. Open the generated URL to use the app.
 
 5. **Database schema**  
-   The app does not run migrations automatically. If your Postgres is empty, create the tables (e.g. run the SQL below once, or add a simple migration step):
+   On startup, the server runs `CREATE TABLE IF NOT EXISTS` for `users`, `months`, and `expenses`. You do not need to run SQL manually on Railway unless you prefer to. For local Postgres without migrations, you can still run the SQL below once:
 
 ```sql
 CREATE TABLE IF NOT EXISTS users (

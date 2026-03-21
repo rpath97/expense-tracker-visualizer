@@ -33,6 +33,38 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+// Create tables on first boot (Railway / fresh Postgres has no schema)
+async function ensureSchema() {
+  if (!process.env.DATABASE_URL) {
+    console.error('FATAL: DATABASE_URL is not set. Add it in Railway Variables (reference Postgres).');
+    process.exit(1);
+  }
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      email VARCHAR(255) UNIQUE NOT NULL,
+      password_hash VARCHAR(255) NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS months (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      year INTEGER NOT NULL,
+      month INTEGER NOT NULL,
+      income NUMERIC(12,2) DEFAULT 0,
+      UNIQUE(user_id, year, month)
+    )`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS expenses (
+      id SERIAL PRIMARY KEY,
+      month_id INTEGER NOT NULL REFERENCES months(id) ON DELETE CASCADE,
+      name VARCHAR(255) NOT NULL,
+      amount NUMERIC(12,2) NOT NULL
+    )`);
+  console.log('Database schema ready (users, months, expenses).');
+}
+
 // --- Middleware ---
 app.use(express.json());
 app.use(cookieParser());
@@ -274,9 +306,17 @@ app.get('/api/finance/months', authRequired, async (req, res) => {
   }
 });
 
-// --- Start server (0.0.0.0 = listen on all interfaces; required in Docker / Railway)
+// --- Start server (after DB schema exists)
 // Railway: public domain "target port" MUST match this number (see Deploy Logs).
-console.log('BOOT: listening on PORT from env =', process.env.PORT || '(unset, using ' + PORT + ')');
-app.listen(PORT, '0.0.0.0', function () {
-  console.log('Server listening on 0.0.0.0:' + PORT);
-});
+console.log('BOOT: PORT from env =', process.env.PORT || '(unset, using ' + PORT + ')');
+
+ensureSchema()
+  .then(function () {
+    app.listen(PORT, '0.0.0.0', function () {
+      console.log('Server listening on 0.0.0.0:' + PORT);
+    });
+  })
+  .catch(function (err) {
+    console.error('Database init failed:', err.message || err);
+    process.exit(1);
+  });
