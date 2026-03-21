@@ -13,6 +13,12 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const COOKIE_NAME = process.env.COOKIE_NAME || 'auth_token';
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
+const isProduction = process.env.NODE_ENV === 'production';
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: 'lax',
+  ...(isProduction && { secure: true }),
+};
 
 // --- DB pool ---
 const pool = new Pool({
@@ -23,10 +29,11 @@ const pool = new Pool({
 app.use(express.json());
 app.use(cookieParser());
 
-// allow frontend from same origin
+// CORS: same origin in dev; in production use ORIGIN env (e.g. https://your-app.railway.app)
+const corsOrigin = process.env.ORIGIN || ('http://localhost:' + PORT);
 app.use(
   cors({
-    origin: 'http://localhost:' + PORT,
+    origin: corsOrigin,
     credentials: true,
   })
 );
@@ -71,10 +78,7 @@ app.post('/api/auth/signup', async (req, res) => {
     const token = createToken(user.id);
 
     res
-      .cookie(COOKIE_NAME, token, {
-        httpOnly: true,
-        sameSite: 'lax',
-      })
+      .cookie(COOKIE_NAME, token, cookieOptions)
       .json({ id: user.id, email: user.email });
   } catch (err) {
     console.error('signup error', err);
@@ -97,10 +101,7 @@ app.post('/api/auth/login', async (req, res) => {
     const token = createToken(user.id);
 
     res
-      .cookie(COOKIE_NAME, token, {
-        httpOnly: true,
-        sameSite: 'lax',
-      })
+      .cookie(COOKIE_NAME, token, cookieOptions)
       .json({ id: user.id, email: user.email });
   } catch (err) {
     console.error('login error', err);
@@ -109,7 +110,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 app.post('/api/auth/logout', (req, res) => {
-  res.clearCookie(COOKIE_NAME).json({ ok: true });
+  res.clearCookie(COOKIE_NAME, cookieOptions).json({ ok: true });
 });
 
 app.get('/api/auth/me', authRequired, async (req, res) => {

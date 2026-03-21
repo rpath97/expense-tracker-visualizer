@@ -599,6 +599,18 @@
       });
     }
 
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async function () {
+        try {
+          await apiJson('/api/auth/logout', { method: 'POST' });
+        } catch (_) {}
+        appInitialized = false;
+        showAuthScreen();
+        setTab('login');
+      });
+    }
+
     try {
       await apiJson('/api/auth/me');
       showAppScreen();

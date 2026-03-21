@@ -229,6 +229,24 @@ body {
   background: var(--surface-hover);
 }
 
+.btn-logout {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.btn-logout:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+  border-color: var(--text-muted);
+}
+
 .header-avatar {
   width: 36px;
   height: 36px;
