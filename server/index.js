@@ -20,6 +20,14 @@ const cookieOptions = {
   ...(isProduction && { secure: true }),
 };
 
+// Behind Railway / reverse proxies (correct HTTPS, cookies)
+app.set('trust proxy', 1);
+
+// Health check FIRST — no middleware, so Railway edge always gets a response
+app.get('/health', function (req, res) {
+  res.status(200).type('text').send('ok');
+});
+
 // --- DB pool ---
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -29,19 +37,15 @@ const pool = new Pool({
 app.use(express.json());
 app.use(cookieParser());
 
-// CORS: same origin in dev; in production use ORIGIN env (e.g. https://your-app.railway.app)
-const corsOrigin = process.env.ORIGIN || ('http://localhost:' + PORT);
+// CORS only for API (not /health or static); avoids edge/proxy issues with global CORS
+const corsOrigin = process.env.ORIGIN || 'http://localhost:' + PORT;
 app.use(
+  '/api',
   cors({
     origin: corsOrigin,
     credentials: true,
   })
 );
-
-// Health check (must be before static files)
-app.get('/health', function (req, res) {
-  res.status(200).send('ok');
-});
 
 // serve your existing static files (index.html, app.js, styles.css)
 app.use(express.static(path.join(__dirname, '..')));
@@ -271,6 +275,8 @@ app.get('/api/finance/months', authRequired, async (req, res) => {
 });
 
 // --- Start server (0.0.0.0 = listen on all interfaces; required in Docker / Railway)
+// Railway: public domain "target port" MUST match this number (see Deploy Logs).
+console.log('BOOT: listening on PORT from env =', process.env.PORT || '(unset, using ' + PORT + ')');
 app.listen(PORT, '0.0.0.0', function () {
   console.log('Server listening on 0.0.0.0:' + PORT);
 });

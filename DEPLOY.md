@@ -18,6 +18,12 @@ Set these in your hosting dashboard (and in `.env` for local runs):
 
 The repo includes a **`Dockerfile`** at the root so Railway builds a **Node** image (Express + static files). If Railway ever treats the project as a static/Caddy site, push the latest code so the Dockerfile is used, or in service **Settings** set the builder to **Dockerfile**.
 
+### Public URL port (must match the app)
+
+In **Settings → Networking**, your public domain has a **target port**. It **must be the same** as the port in **Deploy Logs** (`Server listening on 0.0.0.0:XXXX`).  
+Example: if logs say **8080**, the domain must show **→ Port 8080**, not 4000.  
+If they differ, you get **Application failed to respond**. Edit the domain’s port or remove and **Generate Domain** again using the port from the logs.
+
 1. **Create a project** at [railway.app](https://railway.app) and connect your GitHub repo (`rpath97/expense-tracker-visualizer`).
 
 2. **Add PostgreSQL**  
