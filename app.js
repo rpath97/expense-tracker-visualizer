@@ -4,8 +4,8 @@
   const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   const COLORS = [
-    '#3fb950', '#58a6ff', '#a371f7', '#f85149', '#d29922',
-    '#79c0ff', '#bc8cff', '#ff7b72', '#e3b341', '#56d4dd'
+    '#7C3AED', '#6366F1', '#06B6D4', '#A78BFA', '#22C55E',
+    '#4ADE80', '#F87171', '#8B5CF6', '#38BDF8', '#A855F7'
   ];
 
   let chart = null;
@@ -372,15 +372,15 @@
             {
               label: 'Income',
               data: incomeByMonth,
-              backgroundColor: 'rgba(63, 185, 80, 0.7)',
-              borderColor: '#3fb950',
+              backgroundColor: 'rgba(34, 197, 94, 0.65)',
+              borderColor: '#22C55E',
               borderWidth: 1
             },
             {
               label: 'Expenses',
               data: expensesByMonth,
-              backgroundColor: 'rgba(248, 81, 73, 0.7)',
-              borderColor: '#f85149',
+              backgroundColor: 'rgba(248, 113, 113, 0.65)',
+              borderColor: '#F87171',
               borderWidth: 1
             }
           ]
@@ -389,13 +389,24 @@
           responsive: true,
           maintainAspectRatio: true,
           scales: {
+            x: {
+              ticks: { color: '#94A3B8' },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            },
             y: {
               beginAtZero: true,
-              ticks: { callback: function (v) { return '$' + v; } }
+              ticks: {
+                color: '#94A3B8',
+                callback: function (v) { return '$' + v; }
+              },
+              grid: { color: 'rgba(255,255,255,0.06)' }
             }
           },
           plugins: {
-            legend: { position: 'top' },
+            legend: {
+              position: 'top',
+              labels: { color: '#F8FAFC' }
+            },
             tooltip: {
               callbacks: {
                 label: function (item) { return item.dataset.label + ': ' + formatMoney(item.raw); }
@@ -425,7 +436,7 @@
         if (incomeEl) incomeEl.focus();
       });
     });
-  }
+  } 66666
 
   function addExpenseRow() {
     const container = document.getElementById('expense-rows');

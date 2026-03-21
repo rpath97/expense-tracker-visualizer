@@ -1,15 +1,41 @@
+/* Personal Finance Dashboard – Color System */
 :root {
-  --bg: #1a1a2e;
-  --surface: #252538;
-  --surface-hover: #2e2e44;
-  --border: #3d3d5c;
-  --text: #e6e6f0;
-  --text-muted: #9898b0;
-  --accent: #3fb950;
-  --accent-dim: #238636;
-  --expense: #f85149;
-  --expense-dim: #da3633;
-  --warning: #d29922;
+  --color-navy: #0f172a;
+  --color-deep-blue: #1e3a8a;
+  --color-indigo-deep: #312e81;
+  --bg-gradient: linear-gradient(135deg, #0f172a, #1e3a8a, #312e81);
+
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+  --primary-highlight: #a78bfa;
+
+  --income: #22c55e;
+  --remaining-green: #4ade80;
+  --expense: #f87171;
+
+  --accent-indigo: #6366f1;
+  --accent-cyan: #06b6d4;
+
+  --text: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --glow-purple: rgba(124, 58, 237, 0.5);
+  --glow-indigo: rgba(99, 102, 241, 0.4);
+
+  /* Aliases for existing utilities */
+  --bg: var(--color-navy);
+  --surface: var(--card-bg);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --border: var(--card-border);
+  --accent: var(--income);
+  --accent-dim: #16a34a;
+  --expense-dim: #ef4444;
+  --warning: #fbbf24;
+
   --radius: 12px;
   --font: 'Outfit', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -22,7 +48,8 @@
 body {
   margin: 0;
   font-family: var(--font);
-  background: var(--bg);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
   line-height: 1.5;
@@ -43,20 +70,21 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 55%),
-              radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.18), transparent 55%),
-              #050816;
+  background: var(--bg-gradient),
+              radial-gradient(circle at 20% 20%, var(--glow-purple), transparent 45%),
+              radial-gradient(circle at 80% 80%, var(--glow-indigo), transparent 45%);
   z-index: 40;
 }
 
 .auth-card {
   width: 100%;
   max-width: 420px;
-  background: #111827;
+  background: var(--card-bg);
   border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  border: 1px solid var(--card-border);
   padding: 1.75rem 1.75rem 1.5rem;
-  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.75);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.65),
+              0 0 48px -8px var(--glow-purple);
 }
 
 .auth-logo-row {
@@ -76,8 +104,8 @@ body {
   display: inline-flex;
   padding: 0.15rem;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--card-border);
   margin-bottom: 1.25rem;
 }
 
@@ -92,8 +120,9 @@ body {
 }
 
 .auth-tab--active {
-  background: rgba(15, 23, 42, 1);
+  background: rgba(124, 58, 237, 0.25);
   color: var(--text);
+  box-shadow: 0 0 20px -4px var(--glow-purple);
 }
 
 .auth-form {
@@ -116,8 +145,8 @@ body {
 
 .auth-input {
   border-radius: 8px;
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  background: #020617;
+  border: 1px solid var(--card-border);
+  background: rgba(15, 23, 42, 0.5);
   color: var(--text);
   padding: 0.5rem 0.65rem;
   font-family: var(--font);
@@ -126,7 +155,8 @@ body {
 
 .auth-input:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
 }
 
 .auth-submit {
@@ -134,21 +164,23 @@ body {
   border-radius: 10px;
   border: none;
   padding: 0.5rem 0.75rem;
-  background: var(--accent);
-  color: #020617;
+  background: var(--primary);
+  color: var(--text);
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 .auth-submit:hover {
-  background: var(--accent-dim);
+  background: var(--primary-hover);
+  box-shadow: 0 0 24px -4px var(--glow-purple);
 }
 
 .auth-error {
   margin-top: 0.75rem;
   font-size: 0.8rem;
-  color: #f97373;
+  color: var(--expense);
   min-height: 1em;
 }
 
@@ -168,8 +200,9 @@ body {
   justify-content: space-between;
   padding: 1rem 1.5rem;
   margin-bottom: 0;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.4);
+  border-bottom: 1px solid var(--card-border);
+  backdrop-filter: blur(10px);
   flex-shrink: 0;
 }
 
@@ -192,7 +225,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--primary-highlight);
 }
 
 .header-title {
@@ -244,7 +277,8 @@ body {
 .btn-logout:hover {
   color: var(--text);
   background: var(--surface-hover);
-  border-color: var(--text-muted);
+  border-color: var(--primary);
+  box-shadow: 0 0 16px -4px var(--glow-purple);
 }
 
 .header-avatar {
@@ -268,8 +302,8 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   padding: 1rem 1.5rem;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.35);
+  border-bottom: 1px solid var(--card-border);
 }
 
 .summary-card {
@@ -277,9 +311,10 @@ body {
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius);
+  box-shadow: 0 0 40px -12px rgba(124, 58, 237, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
 
 .summary-card-icon {
@@ -293,18 +328,18 @@ body {
 }
 
 .summary-card-icon--income {
-  background: rgba(63, 185, 80, 0.15);
-  color: var(--accent);
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--income);
 }
 
 .summary-card-icon--expenses {
-  background: rgba(248, 81, 73, 0.15);
+  background: rgba(248, 113, 113, 0.15);
   color: var(--expense);
 }
 
 .summary-card-icon--remaining {
-  background: rgba(63, 185, 80, 0.15);
-  color: var(--accent);
+  background: rgba(74, 222, 128, 0.12);
+  color: var(--remaining-green);
 }
 
 .summary-card-text {
@@ -317,12 +352,12 @@ body {
 
 .summary-card-label {
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .summary-card-sublabel {
   font-size: 0.8rem;
-  color: var(--text);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
 }
 
@@ -333,10 +368,13 @@ body {
   flex-shrink: 0;
 }
 
-.summary-card--income .summary-card-value { color: var(--accent); }
+.summary-card--income .summary-card-value { color: var(--income); }
 .summary-card--expenses .summary-card-value { color: var(--expense); }
-.summary-card--remaining .summary-card-value { color: var(--accent); }
+.summary-card--remaining .summary-card-value { color: var(--remaining-green); }
 .summary-card--remaining.negative .summary-card-value { color: var(--expense); }
+.summary-card--remaining.negative {
+  box-shadow: 0 0 32px -8px rgba(248, 113, 113, 0.25), 0 0 0 1px rgba(248, 113, 113, 0.2) inset;
+}
 
 @media (max-width: 700px) {
   .summary-cards {
@@ -363,7 +401,7 @@ body {
 }
 
 .inputs-panel {
-  background: var(--bg);
+  background: transparent;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -371,7 +409,7 @@ body {
 }
 
 .chart-panel {
-  background: var(--surface);
+  background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -381,7 +419,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  background: var(--surface);
+  background: transparent;
 }
 
 @media (max-width: 900px) {
@@ -402,10 +440,13 @@ body {
 }
 
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius);
   padding: 1.25rem 1.5rem;
+  box-shadow: 0 0 48px -10px rgba(124, 58, 237, 0.22),
+              0 0 64px -16px rgba(99, 102, 241, 0.12),
+              0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 
 .card-head {
@@ -424,16 +465,17 @@ body {
 .input-wrap {
   display: flex;
   align-items: center;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .input-wrap:focus-within {
-  border-color: var(--accent);
+  border-color: var(--primary);
   outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
 }
 
 .input-wrap .currency {
@@ -537,8 +579,8 @@ body {
 .period-field select,
 .period-field input {
   width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
   color: var(--text);
@@ -549,7 +591,8 @@ body {
 .period-field select:focus,
 .period-field input:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
 }
 
 .save-hint {
@@ -593,8 +636,8 @@ body {
 }
 
 .btn-add-primary {
-  background: var(--accent);
-  color: var(--bg);
+  background: var(--primary);
+  color: var(--text);
   border: none;
   border-radius: 8px;
   padding: 0.5rem 1.25rem;
@@ -602,12 +645,12 @@ body {
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.15s, filter 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 .btn-add-primary:hover {
-  background: var(--accent-dim);
-  filter: brightness(1.05);
+  background: var(--primary-hover);
+  box-shadow: 0 0 24px -4px var(--glow-purple);
 }
 
 .btn-edit {
@@ -633,8 +676,8 @@ body {
 .expense-name {
   flex: 1;
   min-width: 72px;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
   color: var(--text);
@@ -644,7 +687,8 @@ body {
 
 .expense-name:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
 }
 
 .btn-remove {
@@ -778,8 +822,8 @@ body {
 }
 
 .year-picker-inline select {
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 0.4rem 0.65rem;
   color: var(--text);
@@ -790,7 +834,8 @@ body {
 
 .year-picker-inline select:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
 }
 
 .year-review-merged {
@@ -922,9 +967,10 @@ body {
   justify-content: space-between;
   padding: 0.6rem 1.5rem;
   font-size: 0.8rem;
-  color: var(--text-muted);
-  background: var(--surface);
-  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: rgba(15, 23, 42, 0.5);
+  border-top: 1px solid var(--card-border);
+  backdrop-filter: blur(8px);
 }
 
 .status-bar-left,
