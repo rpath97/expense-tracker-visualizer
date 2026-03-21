@@ -38,6 +38,11 @@ app.use(
   })
 );
 
+// Health check (must be before static files)
+app.get('/health', function (req, res) {
+  res.status(200).send('ok');
+});
+
 // serve your existing static files (index.html, app.js, styles.css)
 app.use(express.static(path.join(__dirname, '..')));
 
@@ -265,7 +270,7 @@ app.get('/api/finance/months', authRequired, async (req, res) => {
   }
 });
 
-// --- Start server ---
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// --- Start server (0.0.0.0 = listen on all interfaces; required in Docker / Railway)
+app.listen(PORT, '0.0.0.0', function () {
+  console.log('Server listening on 0.0.0.0:' + PORT);
 });

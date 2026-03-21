@@ -1,5 +1,6 @@
-# Run the Express app + static frontend (not a static-only Caddy build)
-FROM node:20-alpine
+# Run the Express app + static frontend (not Staticfile/Caddy)
+# Debian slim avoids Alpine + native module (bcrypt) issues on some hosts
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 
@@ -12,7 +13,7 @@ COPY . .
 
 ENV NODE_ENV=production
 
-# Railway sets PORT; app listens on process.env.PORT
+# Railway sets PORT at runtime
 EXPOSE 8080
 
 CMD ["node", "server/index.js"]

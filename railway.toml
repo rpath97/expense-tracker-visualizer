@@ -1,0 +1,4 @@
+# Force Docker build so Railway does not use Staticfile/Caddy for this repo.
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
